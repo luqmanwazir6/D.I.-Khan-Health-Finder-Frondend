@@ -1,0 +1,59 @@
+@layer components {
+  .loader {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    color: var(--color-primary);
+
+    &[data-full-page] {
+      display: flex;
+      flex: 1;
+      inline-size: 100%;
+      min-block-size: 50dvh;
+    }
+  }
+
+  .loader-spinner {
+    --spinner-size: 2rem;
+
+    inline-size: var(--spinner-size);
+    block-size: var(--spinner-size);
+    border: 3px solid var(--color-primary-soft-border);
+    border-block-start-color: currentColor;
+    border-radius: var(--radius-full);
+    animation: loader-spin 0.75s linear infinite;
+
+    &[data-size='sm'] {
+      --spinner-size: 1.25rem;
+      border-width: 2px;
+    }
+
+    &[data-size='lg'] {
+      --spinner-size: 3rem;
+      border-width: 4px;
+    }
+
+    /* Slow down rather than stop, so loading is still communicated. */
+    @media (prefers-reduced-motion: reduce) {
+      animation-duration: 2.4s;
+    }
+
+    @media (forced-colors: active) {
+      border-color: GrayText;
+      border-block-start-color: CanvasText;
+    }
+  }
+
+  .loader-label {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  @keyframes loader-spin {
+    to {
+      rotate: 1turn;
+    }
+  }
+}

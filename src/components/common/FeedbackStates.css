@@ -1,0 +1,97 @@
+@layer components {
+  .feedback-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-12) var(--space-6);
+    background-color: var(--color-surface);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    inline-size: 100%;
+  }
+
+  .feedback-icon-box {
+    inline-size: 3.5rem;
+    block-size: 3.5rem;
+    border-radius: var(--radius-full);
+    background-color: var(--color-surface-muted);
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-block-end: var(--space-4);
+  }
+
+  .error-icon-box {
+    background-color: var(--red-50);
+    color: var(--color-danger);
+  }
+
+  .feedback-title {
+    font-size: var(--text-xl);
+    margin: 0;
+    margin-block-end: var(--space-2);
+  }
+
+  .feedback-message {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    max-inline-size: 28rem;
+    margin: 0;
+    margin-block-end: var(--space-5);
+  }
+
+  .feedback-actions {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  /* Success banner */
+  .success-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background-color: var(--green-50);
+    border: 1px solid var(--green-200);
+    border-radius: var(--radius-md);
+    color: var(--green-900);
+    margin-block-end: var(--space-4);
+  }
+
+  .success-icon {
+    color: var(--color-success);
+    font-size: 1.25rem;
+    margin-block-start: 2px;
+    flex-shrink: 0;
+  }
+
+  .success-content {
+    flex: 1;
+  }
+
+  .success-title {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--green-800);
+  }
+
+  .success-text {
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+
+  .success-dismiss-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--green-800);
+    cursor: pointer;
+    padding: 0;
+  }
+}

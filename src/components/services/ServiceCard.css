@@ -1,0 +1,96 @@
+@layer components {
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .service-card-body {
+    padding: var(--space-5);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .service-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-end: var(--space-3);
+  }
+
+  .service-icon {
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-muted);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+  }
+
+  .service-cat-pill {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    background-color: var(--color-surface-muted);
+    padding: 0.15rem var(--space-2);
+    border-radius: var(--radius-full);
+  }
+
+  .service-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    margin: 0;
+    margin-block-end: var(--space-2);
+  }
+
+  .service-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: var(--leading-normal);
+    margin: 0;
+    margin-block-end: var(--space-4);
+    flex: 1;
+  }
+
+  .service-meta {
+    margin-block-start: auto;
+  }
+
+  .service-price {
+    display: flex;
+    flex-direction: column;
+
+    small {
+      font-size: 0.75rem;
+      color: var(--color-text-subtle);
+    }
+
+    strong {
+      font-size: var(--text-base);
+      color: var(--color-primary);
+    }
+  }
+
+  .service-card-actions {
+    border-block-start: 1px solid var(--color-border);
+    padding: var(--space-3) var(--space-5);
+    background-color: var(--color-surface-muted);
+  }
+
+  .service-action-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--color-primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

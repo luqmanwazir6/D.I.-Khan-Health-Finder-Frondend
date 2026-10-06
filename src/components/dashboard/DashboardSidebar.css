@@ -1,0 +1,131 @@
+@layer components {
+  .dashboard-sidebar {
+    inline-size: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .sidebar-profile-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .sidebar-avatar-icon {
+    font-size: 2.75rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
+  }
+
+  .sidebar-user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sidebar-user-name {
+    font-size: var(--text-base);
+    color: var(--color-text);
+  }
+
+  .sidebar-role-badge {
+    align-self: flex-start;
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: var(--radius-full);
+    font-weight: var(--weight-semibold);
+
+    &.role-customer {
+      background-color: var(--blue-50);
+      color: var(--blue-700);
+    }
+
+    &.role-provider {
+      background-color: var(--green-50);
+      color: var(--green-700);
+    }
+
+    &.role-admin {
+      background-color: var(--amber-50);
+      color: var(--amber-700);
+    }
+  }
+
+  .sidebar-user-city {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+  }
+
+  .sidebar-nav {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2);
+  }
+
+  .sidebar-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sidebar-nav-btn {
+    inline-size: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    border: none;
+    background: transparent;
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    text-align: start;
+    cursor: pointer;
+    transition: background-color var(--duration-fast), color var(--duration-fast);
+
+    &:hover {
+      background-color: var(--color-surface-muted);
+      color: var(--color-primary);
+    }
+
+    &.active {
+      background-color: var(--color-primary-soft);
+      color: var(--color-primary);
+      font-weight: var(--weight-bold);
+    }
+  }
+
+  .sidebar-btn-icon {
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .sidebar-btn-label {
+    flex: 1;
+  }
+
+  .sidebar-badge {
+    font-size: 0.72rem;
+    font-weight: var(--weight-bold);
+    background-color: var(--color-surface-muted);
+    color: var(--color-text-muted);
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+  }
+
+  .active .sidebar-badge {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+  }
+}

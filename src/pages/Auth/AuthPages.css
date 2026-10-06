@@ -1,0 +1,188 @@
+@layer pages {
+  .auth-box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .auth-header {
+    text-align: center;
+    margin-block-end: var(--space-2);
+  }
+
+  .auth-title {
+    font-size: var(--text-2xl);
+    margin: 0;
+    margin-block-end: var(--space-2);
+  }
+
+  .auth-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .auth-role-tabs {
+    display: flex;
+    gap: var(--space-2);
+    margin-block-start: var(--space-4);
+    background-color: var(--color-surface-muted);
+    padding: 3px;
+    border-radius: var(--radius-md);
+  }
+
+  .auth-role-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    cursor: pointer;
+
+    &.active {
+      background-color: var(--color-surface);
+      color: var(--color-primary);
+      font-weight: var(--weight-bold);
+      box-shadow: var(--shadow-xs);
+    }
+  }
+
+  .provider-registration-box {
+    background-color: var(--green-50);
+    border: 1px solid var(--green-200);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    margin-block: var(--space-3);
+  }
+
+  .pro-reg-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    color: var(--green-800);
+    margin-block-end: var(--space-3);
+  }
+
+  .auth-extra-links {
+    display: flex;
+    justify-content: flex-end;
+    margin-block-end: var(--space-4);
+  }
+
+  .forgot-pass-link {
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .auth-submit-btn {
+    margin-block-start: var(--space-2);
+  }
+
+  .auth-alert-error {
+    background-color: var(--red-50);
+    border: 1px solid var(--color-danger);
+    color: var(--color-danger);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+  }
+
+  .demo-accounts-panel {
+    background-color: var(--color-surface-muted);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    margin-block-start: var(--space-2);
+    text-align: center;
+  }
+
+  .demo-accounts-title {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: var(--weight-bold);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-block-end: var(--space-2);
+  }
+
+  .demo-buttons-grid {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .demo-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: var(--space-2);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background-color: var(--color-primary-soft);
+    }
+  }
+
+  .auth-footer-text {
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-block-start: var(--space-4);
+
+    a {
+      font-weight: var(--weight-bold);
+    }
+  }
+
+  .back-to-login-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .auth-success-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-2);
+    padding: var(--space-4);
+
+    h3 {
+      font-size: var(--text-lg);
+      margin: 0;
+    }
+
+    p {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      margin: 0;
+    }
+  }
+
+  .auth-success-ico {
+    font-size: 3rem;
+    color: var(--color-success);
+    margin-block-end: var(--space-2);
+  }
+}

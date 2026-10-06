@@ -1,0 +1,419 @@
+/* ==========================================================================
+   D.I. Khan Service Finder — Global styles
+   --------------------------------------------------------------------------
+   Layer order (lowest → highest priority). Component and page stylesheets
+   wrap their rules in the matching layer, so specificity never has to be
+   fought with !important or long selectors.
+   ========================================================================== */
+@layer reset, base, layout, components, pages, utilities;
+
+/* --------------------------------------------------------------------------
+   Design tokens
+   Tier 1 = raw palette/scales. Tier 2 = semantic tokens used by components.
+   Components should reference Tier 2 tokens wherever possible.
+   -------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  /* ---- Tier 1: palette ---- */
+  --green-50: #edf7f3;
+  --green-100: #d4ede4;
+  --green-200: #a9dac9;
+  --green-500: #14866d;
+  --green-600: #0e6f5c;
+  --green-700: #0b5d4f;
+  --green-800: #084a3f;
+  --green-900: #05332b;
+
+  --amber-50: #fff7e8;
+  --amber-100: #fdeac4;
+  --amber-500: #f2a114;
+  --amber-600: #d98500;
+  --amber-700: #a85f00;
+
+  --gray-0: #ffffff;
+  --gray-25: #fafbfa;
+  --gray-50: #f4f6f5;
+  --gray-100: #e9edeb;
+  --gray-200: #d8dedb;
+  --gray-300: #bcc5c1;
+  --gray-500: #6b7773;
+  --gray-600: #525d59;
+  --gray-700: #3b4542;
+  --gray-800: #25302d;
+  --gray-900: #141c1a;
+
+  --red-50: #fdf0ef;
+  --red-600: #c4332b;
+  --red-700: #9f2620;
+  --blue-50: #eef4fd;
+  --blue-600: #1f5fc8;
+  --blue-700: #194c9f;
+
+  /* ---- Tier 2: semantic colour ---- */
+  --color-primary: var(--green-700);
+  --color-primary-hover: var(--green-800);
+  --color-primary-active: var(--green-900);
+  --color-primary-soft: var(--green-50);
+  --color-primary-soft-border: var(--green-200);
+  --color-on-primary: var(--gray-0);
+
+  --color-accent: var(--amber-600);
+  --color-accent-soft: var(--amber-50);
+  --color-rating: var(--amber-500);
+
+  --color-text: var(--gray-900);
+  --color-text-muted: var(--gray-600);
+  --color-text-subtle: var(--gray-500);
+  --color-text-inverse: var(--gray-0);
+
+  --color-bg: var(--gray-25);
+  --color-surface: var(--gray-0);
+  --color-surface-muted: var(--gray-50);
+  --color-surface-sunken: var(--gray-100);
+  --color-surface-inverse: var(--green-900);
+
+  --color-border: var(--gray-200);
+  --color-border-strong: var(--gray-300);
+
+  --color-focus: var(--blue-600);
+
+  /* Status tones (used by badges, alerts, request statuses) */
+  --color-success: var(--green-600);
+  --color-success-soft: var(--green-50);
+  --color-warning: var(--amber-700);
+  --color-warning-soft: var(--amber-50);
+  --color-danger: var(--red-600);
+  --color-danger-soft: var(--red-50);
+  --color-info: var(--blue-700);
+  --color-info-soft: var(--blue-50);
+  --color-neutral: var(--gray-600);
+  --color-neutral-soft: var(--gray-100);
+
+  /* ---- Typography ----
+     System font stack: zero download cost, native look on Android/iOS/Windows,
+     and good fallback coverage for Urdu script. */
+  --font-sans:
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-mono: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: clamp(1.375rem, 1.2rem + 0.75vw, 1.625rem);
+  --text-3xl: clamp(1.625rem, 1.3rem + 1.4vw, 2.125rem);
+  --text-4xl: clamp(2rem, 1.35rem + 2.75vw, 3.125rem);
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.55;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ---- Spacing (4px base, expressed in rem) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* ---- Shape & depth ---- */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 999px;
+
+  --shadow-xs: 0 1px 2px rgb(20 28 26 / 0.06);
+  --shadow-sm: 0 1px 2px rgb(20 28 26 / 0.06), 0 1px 3px rgb(20 28 26 / 0.08);
+  --shadow-md: 0 2px 4px rgb(20 28 26 / 0.05), 0 6px 16px rgb(20 28 26 / 0.08);
+  --shadow-lg: 0 4px 8px rgb(20 28 26 / 0.05), 0 16px 40px rgb(20 28 26 / 0.12);
+
+  /* ---- Layout ---- */
+  --container-max: 75rem;
+  --container-narrow: 45rem;
+  --container-padding: clamp(1rem, 0.5rem + 2.5vw, 2rem);
+  --header-height: 4rem;
+  --tap-target: 2.75rem; /* 44px — comfortable touch target */
+
+  /* ---- Layering ---- */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+
+  /* ---- Motion ---- */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* --------------------------------------------------------------------------
+   Reset — minimal and element-scoped. Zero specificity via :where().
+   -------------------------------------------------------------------------- */
+@layer reset {
+  /* Box-sizing is the one universal rule; it lives in the lowest layer with
+     zero specificity so anything can override it. */
+  :where(*, *::before, *::after) {
+    box-sizing: border-box;
+  }
+
+  :where(html) {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  :where(body) {
+    margin: 0;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd) {
+    margin-block: 0;
+  }
+
+  :where(img, picture, svg, video, canvas) {
+    display: block;
+    max-inline-size: 100%;
+  }
+
+  :where(img, video) {
+    block-size: auto;
+  }
+
+  :where(input, button, textarea, select) {
+    font: inherit;
+    color: inherit;
+  }
+
+  :where(button) {
+    cursor: pointer;
+  }
+
+  :where(textarea) {
+    resize: vertical;
+  }
+
+  :where(table) {
+    border-collapse: collapse;
+  }
+
+  /* Keep the `hidden` attribute reliable even if a display value is set. */
+  :where([hidden]:not([hidden='until-found'])) {
+    display: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Base — document defaults
+   -------------------------------------------------------------------------- */
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    font-size: 100%; /* respect the user's browser font-size setting */
+    line-height: var(--leading-normal);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    accent-color: var(--color-primary);
+    scroll-padding-block-start: calc(var(--header-height) + var(--space-4));
+    scrollbar-color: var(--gray-300) transparent;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    min-block-size: 100dvh;
+    font-size: var(--text-base);
+    overflow-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-block-size: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-text);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: var(--text-4xl);
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-size: var(--text-3xl);
+  }
+
+  h3 {
+    font-size: var(--text-2xl);
+  }
+
+  h4 {
+    font-size: var(--text-xl);
+  }
+
+  h5,
+  h6 {
+    font-size: var(--text-lg);
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+
+    &:hover {
+      color: var(--color-primary-hover);
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  strong,
+  b {
+    font-weight: var(--weight-semibold);
+  }
+
+  small {
+    font-size: var(--text-sm);
+  }
+
+  code,
+  kbd,
+  pre {
+    font-family: var(--font-mono);
+    font-size: 0.925em;
+  }
+
+  hr {
+    border: 0;
+    border-block-start: 1px solid var(--color-border);
+    margin-block: var(--space-6);
+  }
+
+  ::placeholder {
+    color: var(--color-text-subtle);
+    opacity: 1;
+  }
+
+  ::selection {
+    background-color: var(--green-100);
+    color: var(--green-900);
+  }
+
+  /* Visible, consistent keyboard focus for every interactive element. */
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  @media (forced-colors: active) {
+    :focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Layout primitives
+   -------------------------------------------------------------------------- */
+@layer layout {
+  .container {
+    inline-size: 100%;
+    max-inline-size: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  .container[data-width='narrow'] {
+    max-inline-size: var(--container-narrow);
+  }
+
+  .page-section {
+    padding-block: clamp(var(--space-8), 5vw, var(--space-16));
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--stack-gap, var(--space-4));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Utilities — single-purpose helpers (highest priority layer)
+   -------------------------------------------------------------------------- */
+@layer utilities {
+  /* Hide visually but keep available to screen readers. */
+  .visually-hidden {
+    position: absolute !important;
+    inline-size: 1px !important;
+    block-size: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  /* "Skip to content" link — appears when focused via keyboard. */
+  .skip-link {
+    position: absolute;
+    inset-block-start: var(--space-2);
+    inset-inline-start: var(--space-2);
+    z-index: var(--z-toast);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    font-weight: var(--weight-semibold);
+    text-decoration: none;
+    translate: 0 -200%;
+
+    &:focus-visible {
+      translate: 0 0;
+      color: var(--color-on-primary);
+    }
+  }
+
+  .text-muted {
+    color: var(--color-text-muted);
+  }
+
+  .text-center {
+    text-align: center;
+  }
+}

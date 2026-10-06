@@ -1,0 +1,105 @@
+@layer components {
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    background-color: rgba(20, 28, 26, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    backdrop-filter: blur(2px);
+  }
+
+  .modal-dialog {
+    inline-size: 100%;
+    max-block-size: 90dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-border);
+    outline: none;
+    overflow: hidden;
+    animation: modal-enter var(--duration-fast) var(--ease-standard);
+  }
+
+  @keyframes modal-enter {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .modal-sm {
+    max-inline-size: 26rem;
+  }
+
+  .modal-md {
+    max-inline-size: 36rem;
+  }
+
+  .modal-lg {
+    max-inline-size: 48rem;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-6);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .modal-title {
+    font-size: var(--text-xl);
+    margin: 0;
+  }
+
+  .modal-close-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    padding: 0;
+    border-radius: var(--radius-full);
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-surface-muted);
+      color: var(--color-text);
+    }
+  }
+
+  .modal-body {
+    padding: var(--space-6);
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .confirm-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .confirm-modal-message {
+    color: var(--color-text-muted);
+    font-size: var(--text-base);
+  }
+
+  .confirm-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-3);
+  }
+}

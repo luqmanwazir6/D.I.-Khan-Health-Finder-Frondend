@@ -1,0 +1,69 @@
+@layer components {
+  .skeleton-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .skeleton-avatar {
+    inline-size: 4.5rem;
+    block-size: 4.5rem;
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-sunken);
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  .skeleton-lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .skeleton-line {
+    block-size: 0.875rem;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface-sunken);
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+
+  .skeleton-title {
+    inline-size: 60%;
+    block-size: 1.25rem;
+  }
+
+  .skeleton-subtitle {
+    inline-size: 40%;
+  }
+
+  .skeleton-text {
+    inline-size: 85%;
+    margin-block-start: var(--space-2);
+  }
+
+  .skeleton-footer {
+    inline-size: 50%;
+    margin-block-start: auto;
+  }
+
+  @keyframes skeleton-pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-avatar,
+    .skeleton-line {
+      animation: none;
+      opacity: 0.7;
+    }
+  }
+}

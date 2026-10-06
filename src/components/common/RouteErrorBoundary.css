@@ -1,0 +1,63 @@
+@layer components {
+  .route-error {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    min-block-size: 60dvh;
+    padding-block: var(--space-16);
+    text-align: center;
+  }
+
+  .route-error-title {
+    font-size: var(--text-3xl);
+  }
+
+  .route-error-message {
+    max-inline-size: 36rem;
+    color: var(--color-text-muted);
+  }
+
+  .route-error-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-block-start: var(--space-2);
+  }
+
+  .route-error-button,
+  .route-error-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: var(--tap-target);
+    padding-inline: var(--space-5);
+    border-radius: var(--radius-md);
+    font-weight: var(--weight-semibold);
+    text-decoration: none;
+  }
+
+  .route-error-button {
+    border: 1px solid transparent;
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+
+    &:hover {
+      background-color: var(--color-primary-hover);
+    }
+  }
+
+  .route-error-link {
+    border: 1px solid var(--color-border-strong);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+
+    &:hover {
+      color: var(--color-text);
+      background-color: var(--color-surface-muted);
+    }
+  }
+}

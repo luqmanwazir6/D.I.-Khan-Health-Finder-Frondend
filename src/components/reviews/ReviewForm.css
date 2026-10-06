@@ -1,0 +1,51 @@
+@layer components {
+  .review-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .review-rating-select-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .star-picker {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .star-pick-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 1.75rem;
+    color: var(--gray-300);
+    cursor: pointer;
+    transition: color var(--duration-fast), transform var(--duration-fast);
+
+    &:hover,
+    &.filled {
+      color: var(--color-rating);
+    }
+
+    &:hover {
+      transform: scale(1.15);
+    }
+  }
+
+  .rating-select-text {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin-inline-start: var(--space-2);
+  }
+
+  .review-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-3);
+  }
+}
