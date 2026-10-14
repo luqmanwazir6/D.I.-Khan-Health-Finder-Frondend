@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FaLock, FaEnvelope, FaUserCheck, FaBriefcase, FaUserShield } from 'react-icons/fa';
+import { FaLock, FaEnvelope } from 'react-icons/fa';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { useAuth } from '@/context/AuthContext';
 import { ROUTES, getDashboardPath } from '@/constants/routes';
@@ -49,18 +49,6 @@ export default function LoginPage() {
       navigate(destination, { replace: true });
     } catch (err) {
       setGeneralError(err.message || 'Invalid email or password');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Quick Demo Logins for immediate user evaluation
-  const handleQuickDemo = async (demoRole) => {
-    setIsLoading(true);
-    try {
-      const loggedInUser = await login({ demoRole });
-      const destination = getDashboardPath(loggedInUser?.role);
-      navigate(destination, { replace: true });
     } finally {
       setIsLoading(false);
     }
@@ -120,40 +108,6 @@ export default function LoginPage() {
           Log in
         </Button>
       </form>
-
-      {/* Quick Demo Credentials Panel for testing */}
-      <div className="demo-accounts-panel">
-        <span className="demo-accounts-title">Quick Demo Login:</span>
-        <div className="demo-buttons-grid">
-          <button
-            type="button"
-            className="demo-btn"
-            onClick={() => handleQuickDemo(ROLES.CUSTOMER)}
-            title="Log in as Customer"
-          >
-            <FaUserCheck aria-hidden="true" />
-            <span>Customer</span>
-          </button>
-          <button
-            type="button"
-            className="demo-btn"
-            onClick={() => handleQuickDemo(ROLES.PROVIDER)}
-            title="Log in as Verified Professional"
-          >
-            <FaBriefcase aria-hidden="true" />
-            <span>Professional</span>
-          </button>
-          <button
-            type="button"
-            className="demo-btn"
-            onClick={() => handleQuickDemo(ROLES.ADMIN)}
-            title="Log in as Admin"
-          >
-            <FaUserShield aria-hidden="true" />
-            <span>Admin</span>
-          </button>
-        </div>
-      </div>
 
       <div className="auth-footer-text">
         <span>Don&apos;t have an account? </span>

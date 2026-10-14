@@ -1,14 +1,13 @@
 import { Suspense } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import Loader from '@/components/common/Loader';
-import { APP_CONFIG } from '@/constants/config';
-import { ROUTES } from '@/constants/routes';
 import './Layouts.css';
 
 /**
- * Shell for customer/provider/admin dashboards.
- * Role-specific sidebar navigation is added in Phases 7–9; route protection
- * (ProtectedRoute / RoleBasedRoute) is added in Phase 6.
+ * Complete production shell for Customer, Provider, and Admin dashboards
+ * with responsive Navbar, active role indicators, and full Footer.
  */
 export default function DashboardLayout() {
   return (
@@ -17,19 +16,15 @@ export default function DashboardLayout() {
         Skip to main content
       </a>
 
-      <header className="dashboard-header">
-        <div className="dashboard-header-inner">
-          <Link to={ROUTES.HOME} className="shell-brand">
-            {APP_CONFIG.appName}
-          </Link>
-        </div>
-      </header>
+      <Navbar />
 
       <main id="main-content" className="dashboard-content" tabIndex={-1}>
         <Suspense fallback={<Loader fullPage label="Loading dashboard…" />}>
           <Outlet />
         </Suspense>
       </main>
+
+      <Footer />
     </div>
   );
 }

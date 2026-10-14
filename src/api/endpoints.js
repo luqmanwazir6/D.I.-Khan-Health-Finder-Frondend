@@ -1,7 +1,6 @@
 /**
  * Backend endpoint paths, relative to VITE_API_BASE_URL (which already
- * includes the `/api/v1` prefix). Mirrors the shared API contract exactly —
- * do not change these without a matching backend change.
+ * includes the `/api/v1` prefix). Mirrors the shared API contract exactly.
  */
 const id = (value) => encodeURIComponent(value);
 
@@ -39,6 +38,19 @@ export const ENDPOINTS = Object.freeze({
   }),
 
   USERS: Object.freeze({
+    ROOT: '/users',
     PROFILE: '/users/profile',
+    ADMIN_STATS: '/users/admin/stats',
+  }),
+
+  UPLOAD: Object.freeze({
+    SINGLE: '/upload/single',
+    MULTIPLE: '/upload/multiple',
+  }),
+
+  NOTIFICATIONS: Object.freeze({
+    ROOT: '/notifications',
+    MARK_READ: (notifId) => `/notifications/${id(notifId)}/read`,
+    MARK_ALL_READ: '/notifications/read-all',
   }),
 });

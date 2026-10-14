@@ -6,6 +6,8 @@ import {
   FaMoneyBillWave,
   FaUser,
   FaPhoneAlt,
+  FaPaperclip,
+  FaEye,
 } from 'react-icons/fa';
 import Card from '@/components/common/Card';
 import Button from '@/components/common/Button';
@@ -21,21 +23,49 @@ export default function RequestCard({
   onReject = null,
   onComplete = null,
   onReview = null,
+  onViewDetails = null,
 }) {
   const isCancellable = userRole === 'customer' && CANCELLABLE_STATUSES.includes(request.status);
   const isReviewable = userRole === 'customer' && request.status === REQUEST_STATUS.COMPLETED;
   const isPendingProviderAction = userRole === 'provider' && request.status === REQUEST_STATUS.PENDING;
   const isCompletable = userRole === 'provider' && ['accepted', 'in-progress'].includes(request.status);
 
+  const displayId = request.requestId || `#${(request.id || request._id || '').slice(-6)}`;
+  const attachmentCount = request.attachments ? request.attachments.length : 0;
+
   return (
     <Card className="request-card" as="article">
       <div className="request-card-header">
         <div className="request-service-info">
           <span className="request-service-category">{request.category}</span>
-          <h3 className="request-service-title">{request.service}</h3>
-          <span className="request-id">ID: #{request.id}</span>
+          <h3
+            className="request-service-title"
+            style={onViewDetails ? { cursor: 'pointer' } : undefined}
+            onClick={() => onViewDetails && onViewDetails(request)}
+          >
+            {request.service}
+          </h3>
+          <span className="request-id">ID: {displayId}</span>
         </div>
-        <RequestStatusBadge status={request.status} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {attachmentCount > 0 && (
+            <span
+              style={{
+                fontSize: '11px',
+                background: '#e0e7ff',
+                color: '#3730a3',
+                padding: '2px 8px',
+                borderRadius: '12px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+            >
+              <FaPaperclip /> {attachmentCount} file{attachmentCount > 1 ? 's' : ''}
+            </span>
+          )}
+          <RequestStatusBadge status={request.status} />
+        </div>
       </div>
 
       <p className="request-description">{request.description}</p>
@@ -51,18 +81,18 @@ export default function RequestCard({
         <div className="request-detail-item">
           <FaCalendarAlt className="detail-icon" aria-hidden="true" />
           <span>
-            {request.preferredDate} ({request.preferredTime})
+            {request.preferredDate || 'Flexible date'} ({request.preferredTime})
           </span>
         </div>
 
-        {request.budget && (
+        {request.budget ? (
           <div className="request-detail-item">
             <FaMoneyBillWave className="detail-icon" aria-hidden="true" />
             <span>
               <strong>Budget:</strong> Rs. {Number(request.budget).toLocaleString()}
             </span>
           </div>
-        )}
+        ) : null}
 
         <div className="request-detail-item">
           <FaUser className="detail-icon" aria-hidden="true" />
@@ -93,6 +123,17 @@ export default function RequestCard({
 
       {/* Action buttons depending on state and role */}
       <div className="request-card-actions">
+        {onViewDetails && (
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={<FaEye />}
+            onClick={() => onViewDetails(request)}
+          >
+            Details
+          </Button>
+        )}
+
         {userRole === 'provider' && request.customerPhone && (
           <a
             href={`tel:${request.customerPhone.replace(/\s+/g, '')}`}

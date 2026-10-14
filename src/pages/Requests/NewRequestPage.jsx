@@ -6,14 +6,16 @@ import {
   FaCalendarAlt,
   FaClock,
   FaMoneyBillWave,
-  FaCheckCircle,
   FaUpload,
   FaShieldAlt,
+  FaTimes,
+  FaExclamationCircle,
 } from 'react-icons/fa';
 import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { useAuth } from '@/context/AuthContext';
 import { requestService } from '@/services/requestService';
 import { providerService } from '@/services/providerService';
+import { uploadService } from '@/services/uploadService';
 import { CATEGORIES_DATA, DI_KHAN_AREAS } from '@/constants/data';
 import { ROUTES } from '@/constants/routes';
 import { validateServiceRequest } from '@/validations';
@@ -49,7 +51,9 @@ export default function NewRequestPage() {
   });
 
   const [errors, setErrors] = useState({});
+  const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileName, setSelectedFileName] = useState('');
 
   // If a specific provider was targeted
@@ -81,17 +85,30 @@ export default function NewRequestPage() {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
+    if (submitError) setSubmitError('');
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        setErrors((prev) => ({ ...prev, file: 'File size must be 10 MB or smaller' }));
+        return;
+      }
+      setSelectedFile(file);
       setSelectedFileName(file.name);
+      setErrors((prev) => ({ ...prev, file: null }));
     }
+  };
+
+  const removeFile = () => {
+    setSelectedFile(null);
+    setSelectedFileName('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError('');
     const validation = validateServiceRequest(formData);
 
     if (!validation.isValid) {
@@ -102,23 +119,45 @@ export default function NewRequestPage() {
 
     setIsSubmitting(true);
     try {
-      await requestService.createRequest({
-        ...formData,
+      let attachments = [];
+
+      // If user attached a file, upload it first to storage
+      if (selectedFile) {
+        try {
+          const uploadRes = await uploadService.uploadFile(selectedFile, 'requests');
+          if (uploadRes?.data) {
+            attachments.push(uploadRes.data);
+          }
+        } catch (uploadErr) {
+          const errDetail = uploadErr.response?.data?.message || uploadErr.message;
+          setSubmitError(`File upload failed: ${errDetail}. Please check file type (JPG, PNG, PDF) and size.`);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      const payload = {
         category: selectedCategoryObj?.name || formData.category,
         service: formData.serviceName,
-        customerId: user?.id || 'guest',
-        customerName: user?.name || 'Local Customer',
-        customerPhone: user?.phone || '+92 300 0000000',
-        providerId: targetProvider?.id || null,
-        providerName: targetProvider?.name || null,
-        providerPhone: targetProvider?.phone || null,
-        hasAttachment: Boolean(selectedFileName),
-      });
+        title: `${formData.serviceName} in ${formData.area}`,
+        description: formData.description,
+        address: formData.address,
+        area: formData.area,
+        city: 'Dera Ismail Khan',
+        preferredDate: formData.preferredDate,
+        preferredTime: formData.preferredTime,
+        budget: formData.budget ? Number(formData.budget) : 0,
+        notes: formData.notes,
+        providerId: targetProvider?._id || targetProvider?.id || null,
+        attachments,
+      };
+
+      await requestService.createRequest(payload);
 
       // Redirect to customer dashboard
       navigate(ROUTES.CUSTOMER_DASHBOARD);
     } catch (err) {
-      alert(err.message || 'Failed to submit request');
+      setSubmitError(err.message || 'Failed to submit service request. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -138,6 +177,26 @@ export default function NewRequestPage() {
             Describe what needs fixing or installation. We will alert qualified technicians in your neighborhood of Dera Ismail Khan.
           </p>
         </div>
+
+        {submitError && (
+          <div
+            style={{
+              background: '#fee2e2',
+              color: '#991b1b',
+              padding: '12px 16px',
+              borderRadius: '8px',
+              marginBottom: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              fontSize: '14px',
+              fontWeight: 500,
+            }}
+          >
+            <FaExclamationCircle />
+            <span>{submitError}</span>
+          </div>
+        )}
 
         <Card className="request-form-card" as="div">
           <form onSubmit={handleSubmit} noValidate>
@@ -178,7 +237,7 @@ export default function NewRequestPage() {
                 onChange={handleChange}
                 placeholder="Example: I have a water leakage in my kitchen under the sink and the motor is making a loud buzzing sound. Need a reliable plumber to inspect."
                 error={errors.description}
-                helperText="Be as specific as possible (at least 15 characters)."
+                helperText="Be as specific as possible (at least 10 characters)."
                 required
                 rows={4}
               />
@@ -201,11 +260,11 @@ export default function NewRequestPage() {
                 />
 
                 <Input
-                  label="Full Street Address / Landmark"
+                  label="Street Address / House No. / Landmark"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
-                  placeholder="House #, Mohallah / Street, Near Landmark"
+                  placeholder="e.g. House 42, St 3, Near Purani Sabzi Mandi"
                   error={errors.address}
                   required
                 />
@@ -214,28 +273,27 @@ export default function NewRequestPage() {
 
             {/* Schedule & Budget */}
             <div className="form-section-group">
-              <h3 className="form-section-title">3. Schedule & Budget</h3>
+              <h3 className="form-section-title">3. Timing, Budget & Photo</h3>
 
               <div className="form-grid-two">
                 <Input
-                  label="Preferred Date"
+                  label="Preferred Date (Optional)"
                   name="preferredDate"
                   type="date"
                   value={formData.preferredDate}
                   onChange={handleChange}
                   error={errors.preferredDate}
-                  required
                 />
 
                 <Select
-                  label="Preferred Time Slot"
+                  label="Preferred Time Window"
                   name="preferredTime"
                   value={formData.preferredTime}
                   options={[
-                    'Morning (9:00 AM - 1:00 PM)',
-                    'Afternoon (1:00 PM - 5:00 PM)',
-                    'Evening (5:00 PM - 9:00 PM)',
-                    'Emergency / As soon as possible',
+                    { value: 'Morning (9:00 AM - 1:00 PM)', label: 'Morning (9:00 AM - 1:00 PM)' },
+                    { value: 'Afternoon (1:00 PM - 5:00 PM)', label: 'Afternoon (1:00 PM - 5:00 PM)' },
+                    { value: 'Evening (5:00 PM - 9:00 PM)', label: 'Evening (5:00 PM - 9:00 PM)' },
+                    { value: 'Emergency / ASAP', label: 'Emergency / ASAP' },
                   ]}
                   onChange={handleChange}
                   error={errors.preferredTime}
@@ -257,18 +315,39 @@ export default function NewRequestPage() {
 
                 <div className="form-group">
                   <label className="form-label">
-                    Upload Photo of Problem (Optional)
+                    Upload Photo / Document of Problem (Optional)
                   </label>
-                  <label className="custom-file-upload-box">
-                    <FaUpload aria-hidden="true" />
-                    <span>{selectedFileName || 'Click to attach image / receipt'}</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="visually-hidden"
-                    />
-                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <label className="custom-file-upload-box" style={{ flex: 1, margin: 0 }}>
+                      <FaUpload aria-hidden="true" />
+                      <span>{selectedFileName || 'Click to attach image / document'}</span>
+                      <input
+                        type="file"
+                        accept="image/*,.pdf,.doc,.docx"
+                        onChange={handleFileChange}
+                        className="visually-hidden"
+                      />
+                    </label>
+                    {selectedFileName && (
+                      <button
+                        type="button"
+                        onClick={removeFile}
+                        style={{
+                          background: '#fee2e2',
+                          color: '#dc2626',
+                          border: 'none',
+                          borderRadius: '8px',
+                          padding: '10px 14px',
+                          cursor: 'pointer',
+                        }}
+                        title="Remove file"
+                      >
+                        <FaTimes />
+                      </button>
+                    )}
+                  </div>
+                  {errors.file && <span className="form-error-text">{errors.file}</span>}
+                  <small className="form-helper-text">Max 10 MB. JPG, PNG, WEBP, or PDF.</small>
                 </div>
               </div>
 

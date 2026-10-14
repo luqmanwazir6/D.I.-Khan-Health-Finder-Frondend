@@ -1,11 +1,14 @@
 import { Suspense } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import Loader from '@/components/common/Loader';
-import { APP_CONFIG } from '@/constants/config';
-import { ROUTES } from '@/constants/routes';
 import './Layouts.css';
 
-/** Focused layout for login/registration flows — no distracting navigation. */
+/**
+ * Layout for login, registration, and password recovery flows
+ * with full Navbar, unified brand headers, and professional Footer.
+ */
 export default function AuthLayout() {
   return (
     <div className="layout-auth">
@@ -13,11 +16,7 @@ export default function AuthLayout() {
         Skip to main content
       </a>
 
-      <header className="auth-layout-header">
-        <Link to={ROUTES.HOME} className="shell-brand">
-          {APP_CONFIG.appName}
-        </Link>
-      </header>
+      <Navbar />
 
       <main id="main-content" className="auth-content" tabIndex={-1}>
         <div className="auth-card">
@@ -26,6 +25,8 @@ export default function AuthLayout() {
           </Suspense>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

@@ -8,8 +8,6 @@ import {
   FaMapMarkerAlt,
   FaSignOutAlt,
   FaBriefcase,
-  FaUserShield,
-  FaUserCheck,
 } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import { APP_CONFIG } from '@/constants/config';
@@ -19,7 +17,7 @@ import Button from '@/components/common/Button';
 import './Navbar.css';
 
 export default function Navbar() {
-  const { user, role, isAuthenticated, logout, switchRole } = useAuth();
+  const { user, role, isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -126,34 +124,7 @@ export default function Navbar() {
                     </Link>
                   )}
 
-                  {/* Quick role switcher for testing convenience */}
-                  <div className="dropdown-role-switch">
-                    <span className="role-switch-title">Switch Mode (Demo):</span>
-                    <div className="role-switch-buttons">
-                      <button
-                        type="button"
-                        className={`role-chip ${role === ROLES.CUSTOMER ? 'active' : ''}`}
-                        onClick={() => switchRole(ROLES.CUSTOMER)}
-                      >
-                        <FaUserCheck aria-hidden="true" /> Customer
-                      </button>
-                      <button
-                        type="button"
-                        className={`role-chip ${role === ROLES.PROVIDER ? 'active' : ''}`}
-                        onClick={() => switchRole(ROLES.PROVIDER)}
-                      >
-                        <FaBriefcase aria-hidden="true" /> Pro
-                      </button>
-                      <button
-                        type="button"
-                        className={`role-chip ${role === ROLES.ADMIN ? 'active' : ''}`}
-                        onClick={() => switchRole(ROLES.ADMIN)}
-                      >
-                        <FaUserShield aria-hidden="true" /> Admin
-                      </button>
-                    </div>
-                  </div>
-
+                  {/* Clean professional user menu without demo switcher */}
                   <div className="dropdown-divider" />
                   <button
                     type="button"

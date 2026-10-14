@@ -1,6 +1,5 @@
 import axiosClient from '@/api/axiosClient';
 import { ENDPOINTS } from '@/api/endpoints';
-import { INITIAL_REQUESTS } from '@/constants/data';
 import { REQUEST_STATUS } from '@/constants/requestStatus';
 import { storage } from '@/utils/storage';
 
@@ -10,44 +9,76 @@ const getStoredRequests = () => {
   const local = storage.get(REQUESTS_STORAGE_KEY);
   if (local) {
     try {
-      return JSON.parse(local);
+      const parsed = JSON.parse(local);
+      if (Array.isArray(parsed)) return parsed;
     } catch {
-      // invalid json, re-initialize
+      // invalid json, return empty
     }
   }
-  storage.set(REQUESTS_STORAGE_KEY, JSON.stringify(INITIAL_REQUESTS));
-  return INITIAL_REQUESTS;
+  return [];
 };
 
 const saveStoredRequests = (list) => {
   storage.set(REQUESTS_STORAGE_KEY, JSON.stringify(list));
 };
 
-/**
- * Service module for Service Requests.
- * Shared API Contract:
- * GET /api/v1/requests
- * GET /api/v1/requests/:id
- * POST /api/v1/requests
- * PATCH /api/v1/requests/:id
- * PATCH /api/v1/requests/:id/cancel
- */
+export const normalizeRequest = (r) => {
+  if (!r) return null;
+  const id = (r.id || r._id || '').toString();
+  return {
+    ...r,
+    id,
+    _id: (r._id || id).toString(),
+    requestId: r.requestId || `REQ-${id.slice(-6).toUpperCase()}`,
+    customerId: (r.customer?._id || r.customer?.id || r.customer || r.customerId || '').toString(),
+    customerName: r.customer?.name || r.customerName || 'Customer',
+    customerPhone: r.customer?.phone || r.customerPhone || '',
+    customerEmail: r.customer?.email || r.customerEmail || '',
+    providerId: r.provider?._id ? r.provider._id.toString() : (r.providerId || (typeof r.provider === 'string' ? r.provider : null)),
+    providerName: r.provider?.name || r.providerName || null,
+    providerPhone: r.provider?.phone || r.providerPhone || null,
+    attachments: Array.isArray(r.attachments) ? r.attachments : [],
+    statusHistory: Array.isArray(r.statusHistory) ? r.statusHistory : [],
+    status: r.status || REQUEST_STATUS.PENDING,
+    createdAt: r.createdAt || new Date().toISOString(),
+  };
+};
+
 export const requestService = {
   async getRequests(params = {}) {
     try {
       const response = await axiosClient.get(ENDPOINTS.REQUESTS.ROOT, { params });
-      return response.data;
+      const rawList = response.data?.data || [];
+      const normalized = rawList.map(normalizeRequest);
+      return {
+        ...response.data,
+        data: normalized,
+      };
     } catch {
-      let list = getStoredRequests();
-      if (params.customerId) {
-        list = list.filter((r) => r.customerId === params.customerId);
+      // Local fallback: strictly filter by the authenticated user's role and identity
+      let list = getStoredRequests().map(normalizeRequest);
+
+      if (params.customerId || params.customerEmail) {
+        list = list.filter((r) => {
+          const matchId = params.customerId && (r.customerId === params.customerId || r.customer === params.customerId);
+          const matchEmail = params.customerEmail && r.customerEmail && r.customerEmail.toLowerCase() === params.customerEmail.toLowerCase();
+          return matchId || matchEmail;
+        });
+      } else if (params.providerId || params.providerEmail) {
+        list = list.filter((r) => {
+          const matchProId = params.providerId && (r.providerId === params.providerId || r.provider === params.providerId);
+          const matchProEmail = params.providerEmail && r.providerEmail && r.providerEmail.toLowerCase() === params.providerEmail.toLowerCase();
+          const matchOpenCategory = !r.providerId && params.category && r.category === params.category;
+          return matchProId || matchProEmail || matchOpenCategory;
+        });
+      } else if (!params.isAdmin) {
+        list = [];
       }
-      if (params.providerId) {
-        list = list.filter((r) => r.providerId === params.providerId);
-      }
+
       if (params.status && params.status !== 'all') {
         list = list.filter((r) => r.status === params.status);
       }
+
       return {
         success: true,
         message: 'Requests fetched successfully',
@@ -57,12 +88,17 @@ export const requestService = {
   },
 
   async getRequestById(id) {
+    const targetId = id?._id || id?.id || id;
     try {
-      const response = await axiosClient.get(ENDPOINTS.REQUESTS.BY_ID(id));
-      return response.data;
+      const response = await axiosClient.get(ENDPOINTS.REQUESTS.BY_ID(targetId));
+      const normalized = normalizeRequest(response.data?.data || response.data);
+      return {
+        ...response.data,
+        data: normalized,
+      };
     } catch {
-      const list = getStoredRequests();
-      const req = list.find((r) => r.id === id);
+      const list = getStoredRequests().map(normalizeRequest);
+      const req = list.find((r) => r.id === targetId || r._id === targetId);
       if (!req) throw new Error('Request not found');
       return {
         success: true,
@@ -75,34 +111,69 @@ export const requestService = {
   async createRequest(requestData) {
     try {
       const response = await axiosClient.post(ENDPOINTS.REQUESTS.ROOT, requestData);
-      return response.data;
-    } catch {
+      const created = normalizeRequest(response.data?.data || response.data);
       const list = getStoredRequests();
-      const newRequest = {
+      if (created) {
+        list.unshift(created);
+        saveStoredRequests(list);
+      }
+      return {
+        success: true,
+        message: response.data?.message || 'Service request submitted successfully',
+        data: created,
+      };
+    } catch (err) {
+      if (err.response && err.response.data?.message) {
+        throw new Error(err.response.data.message, { cause: err });
+      }
+      if (err.message && !err.message.includes('Network Error')) {
+        throw err;
+      }
+      // Offline fallback only on genuine network failure
+      const list = getStoredRequests();
+      const newRequest = normalizeRequest({
         id: `req-${Date.now()}`,
         status: REQUEST_STATUS.PENDING,
         createdAt: new Date().toISOString(),
         ...requestData,
-      };
+      });
       list.unshift(newRequest);
       saveStoredRequests(list);
       return {
         success: true,
-        message: 'Service request submitted successfully',
+        message: 'Service request submitted (local session)',
         data: newRequest,
       };
     }
   },
 
-  async updateRequestStatus(id, newStatus) {
+  async updateRequestStatus(id, newStatus, extraData = {}) {
+    const targetId = id?._id || id?.id || id;
     try {
-      const response = await axiosClient.patch(ENDPOINTS.REQUESTS.BY_ID(id), { status: newStatus });
-      return response.data;
-    } catch {
+      const response = await axiosClient.patch(ENDPOINTS.REQUESTS.BY_ID(targetId), {
+        status: newStatus,
+        ...extraData,
+      });
+      const updated = normalizeRequest(response.data?.data || response.data);
       const list = getStoredRequests();
-      const idx = list.findIndex((r) => r.id === id);
+      const idx = list.findIndex((r) => r.id === targetId || r._id === targetId);
       if (idx !== -1) {
-        list[idx] = { ...list[idx], status: newStatus, updatedAt: new Date().toISOString() };
+        list[idx] = updated;
+        saveStoredRequests(list);
+      }
+      return {
+        success: true,
+        message: response.data?.message || `Request status updated to ${newStatus}`,
+        data: updated,
+      };
+    } catch (err) {
+      if (err.response && err.response.data?.message) {
+        throw new Error(err.response.data.message, { cause: err });
+      }
+      const list = getStoredRequests();
+      const idx = list.findIndex((r) => r.id === targetId || r._id === targetId);
+      if (idx !== -1) {
+        list[idx] = { ...list[idx], status: newStatus, updatedAt: new Date().toISOString(), ...extraData };
         saveStoredRequests(list);
         return {
           success: true,
@@ -110,16 +181,31 @@ export const requestService = {
           data: list[idx],
         };
       }
-      throw new Error('Request not found');
+      throw new Error(err.message || 'Failed to update request status', { cause: err });
     }
   },
 
   async cancelRequest(id, reason = '') {
+    const targetId = id?._id || id?.id || id;
     try {
-      const response = await axiosClient.patch(ENDPOINTS.REQUESTS.CANCEL(id), { reason });
-      return response.data;
-    } catch {
-      return this.updateRequestStatus(id, REQUEST_STATUS.CANCELLED);
+      const response = await axiosClient.patch(ENDPOINTS.REQUESTS.CANCEL(targetId), { reason });
+      const updated = normalizeRequest(response.data?.data || response.data);
+      const list = getStoredRequests();
+      const idx = list.findIndex((r) => r.id === targetId || r._id === targetId);
+      if (idx !== -1) {
+        list[idx] = updated;
+        saveStoredRequests(list);
+      }
+      return {
+        success: true,
+        message: 'Service request has been cancelled',
+        data: updated,
+      };
+    } catch (err) {
+      if (err.response && err.response.data?.message) {
+        throw new Error(err.response.data.message, { cause: err });
+      }
+      return this.updateRequestStatus(targetId, REQUEST_STATUS.CANCELLED);
     }
   },
 };

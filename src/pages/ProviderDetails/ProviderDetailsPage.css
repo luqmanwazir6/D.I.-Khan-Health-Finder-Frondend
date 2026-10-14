@@ -5,7 +5,7 @@
   }
 
   .provider-hero-band {
-    background: linear-gradient(180deg, var(--green-50) 0%, var(--color-surface) 100%);
+    background: linear-gradient(180deg, var(--navy-50) 0%, var(--color-surface) 100%);
     border-block-end: 1px solid var(--color-border);
     padding-block: var(--space-6) var(--space-10);
   }

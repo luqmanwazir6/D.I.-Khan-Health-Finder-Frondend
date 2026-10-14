@@ -55,8 +55,8 @@
   }
 
   .provider-registration-box {
-    background-color: var(--green-50);
-    border: 1px solid var(--green-200);
+    background-color: var(--navy-50);
+    border: 1px solid var(--navy-200);
     border-radius: var(--radius-md);
     padding: var(--space-4);
     margin-block: var(--space-3);
@@ -68,7 +68,7 @@
     gap: var(--space-1);
     font-size: var(--text-xs);
     font-weight: var(--weight-bold);
-    color: var(--green-800);
+    color: var(--navy-800);
     margin-block-end: var(--space-3);
   }
 

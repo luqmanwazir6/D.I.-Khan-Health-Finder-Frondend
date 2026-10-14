@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { authService, DEMO_ACCOUNTS } from '@/services/authService';
-import { tokenStorage } from '@/utils/storage';
+import { authService } from '@/services/authService';
 import { setUnauthorizedHandler } from '@/api/axiosClient';
 
 export const AuthContext = createContext(null);
@@ -46,9 +45,10 @@ export function AuthProvider({ children }) {
     setIsLoading(true);
     try {
       const res = await authService.login(credentials);
-      if (res?.data?.user) {
-        setUser(res.data.user);
-        return res.data.user;
+      const authenticatedUser = res?.data?.user || res?.user || res?.data;
+      if (authenticatedUser) {
+        setUser(authenticatedUser);
+        return authenticatedUser;
       }
     } finally {
       setIsLoading(false);
@@ -59,22 +59,13 @@ export function AuthProvider({ children }) {
     setIsLoading(true);
     try {
       const res = await authService.signup(data);
-      if (res?.data?.user) {
-        setUser(res.data.user);
-        return res.data.user;
+      const authenticatedUser = res?.data?.user || res?.user || res?.data;
+      if (authenticatedUser) {
+        setUser(authenticatedUser);
+        return authenticatedUser;
       }
     } finally {
       setIsLoading(false);
-    }
-  }, []);
-
-  // Quick switcher for demo and testing purposes
-  const switchRole = useCallback((roleName) => {
-    if (DEMO_ACCOUNTS[roleName]) {
-      const demoUser = DEMO_ACCOUNTS[roleName];
-      setUser(demoUser);
-      tokenStorage.set(`demo-token-${demoUser.id}`);
-      localStorage.setItem('dikf_user_session', JSON.stringify(demoUser));
     }
   }, []);
 
@@ -86,7 +77,6 @@ export function AuthProvider({ children }) {
     login,
     signup,
     logout,
-    switchRole,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -15,52 +15,70 @@
 :root {
   color-scheme: light;
 
-  /* ---- Tier 1: palette ---- */
-  --green-50: #edf7f3;
-  --green-100: #d4ede4;
-  --green-200: #a9dac9;
-  --green-500: #14866d;
-  --green-600: #0e6f5c;
-  --green-700: #0b5d4f;
-  --green-800: #084a3f;
-  --green-900: #05332b;
+  /* ---- Tier 1: palette (D.I. Khan Service Finder Brand System) ---- */
+  /* Brand Navy scale (#253C6D / #30497D / #455B8A) */
+  --navy-900: #192747;
+  --navy-800: #253C6D; /* Deep Brand Navy */
+  --navy-700: #30497D; /* Royal Brand Navy */
+  --navy-600: #455B8A; /* Slate Steel Blue */
+  --navy-500: #5972a8;
+  --navy-300: #9cb1d6;
+  --navy-200: #c2d2ea;
+  --navy-100: #e4edf8;
+  --navy-50: #f0f5fb;
 
-  --amber-50: #fff7e8;
-  --amber-100: #fdeac4;
-  --amber-500: #f2a114;
-  --amber-600: #d98500;
-  --amber-700: #a85f00;
+  /* Brand Orange scale (#F2842F - Vibrant Call to Action) */
+  --orange-50: #fff6ee;
+  --orange-100: #ffe8d6;
+  --orange-200: #ffd0ab;
+  --orange-500: #F2842F; /* Primary Brand Vibrant Accent */
+  --orange-600: #d96f1c; /* Accent Hover */
+  --orange-700: #be5d12; /* Accent Active */
 
+  /* Neutral scale */
   --gray-0: #ffffff;
-  --gray-25: #fafbfa;
-  --gray-50: #f4f6f5;
-  --gray-100: #e9edeb;
-  --gray-200: #d8dedb;
-  --gray-300: #bcc5c1;
-  --gray-500: #6b7773;
-  --gray-600: #525d59;
-  --gray-700: #3b4542;
-  --gray-800: #25302d;
-  --gray-900: #141c1a;
+  --gray-25: #f8fafc;
+  --gray-50: #f1f5f9;
+  --gray-100: #e2e8f0;
+  --gray-200: #cbd5e1;
+  --gray-300: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
 
-  --red-50: #fdf0ef;
-  --red-600: #c4332b;
-  --red-700: #9f2620;
-  --blue-50: #eef4fd;
-  --blue-600: #1f5fc8;
-  --blue-700: #194c9f;
+  /* Status accents */
+  --green-50: #ecfdf5;
+  --green-100: #d1fae5;
+  --green-200: #a7f3d0;
+  --green-600: #059669;
+  --green-700: #047857;
+
+  --red-50: #fef2f2;
+  --red-600: #dc2626;
+  --red-700: #b91c1c;
+
+  --blue-50: #eff6ff;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
 
   /* ---- Tier 2: semantic colour ---- */
-  --color-primary: var(--green-700);
-  --color-primary-hover: var(--green-800);
-  --color-primary-active: var(--green-900);
-  --color-primary-soft: var(--green-50);
-  --color-primary-soft-border: var(--green-200);
+  --color-primary: var(--navy-700); /* #30497D */
+  --color-primary-hover: var(--navy-800); /* #253C6D */
+  --color-primary-active: var(--navy-900); /* #192747 */
+  --color-primary-soft: var(--navy-50); /* #f0f5fb */
+  --color-primary-soft-border: var(--navy-200); /* #c2d2ea */
   --color-on-primary: var(--gray-0);
 
-  --color-accent: var(--amber-600);
-  --color-accent-soft: var(--amber-50);
-  --color-rating: var(--amber-500);
+  --color-secondary: var(--navy-600); /* #455B8A */
+  --color-secondary-soft: var(--navy-100); /* #e4edf8 */
+
+  --color-accent: var(--orange-500); /* #F2842F */
+  --color-accent-hover: var(--orange-600); /* #d96f1c */
+  --color-accent-soft: var(--orange-50); /* #fff6ee */
+  --color-accent-border: var(--orange-200); /* #ffd0ab */
+  --color-rating: var(--orange-500); /* #F2842F */
 
   --color-text: var(--gray-900);
   --color-text-muted: var(--gray-600);
@@ -71,22 +89,22 @@
   --color-surface: var(--gray-0);
   --color-surface-muted: var(--gray-50);
   --color-surface-sunken: var(--gray-100);
-  --color-surface-inverse: var(--green-900);
+  --color-surface-inverse: var(--navy-800); /* #253C6D */
 
-  --color-border: var(--gray-200);
-  --color-border-strong: var(--gray-300);
+  --color-border: var(--gray-100);
+  --color-border-strong: var(--gray-200);
 
-  --color-focus: var(--blue-600);
+  --color-focus: var(--orange-500);
 
   /* Status tones (used by badges, alerts, request statuses) */
   --color-success: var(--green-600);
   --color-success-soft: var(--green-50);
-  --color-warning: var(--amber-700);
-  --color-warning-soft: var(--amber-50);
+  --color-warning: var(--orange-600);
+  --color-warning-soft: var(--orange-50);
   --color-danger: var(--red-600);
   --color-danger-soft: var(--red-50);
-  --color-info: var(--blue-700);
-  --color-info-soft: var(--blue-50);
+  --color-info: var(--navy-600);
+  --color-info-soft: var(--navy-50);
   --color-neutral: var(--gray-600);
   --color-neutral-soft: var(--gray-100);
 

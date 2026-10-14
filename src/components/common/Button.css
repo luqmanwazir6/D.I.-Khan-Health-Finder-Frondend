@@ -50,11 +50,26 @@
 
   /* Variants */
   .btn-primary {
-    background-color: var(--color-primary);
+    background-color: var(--color-accent); /* #F2842F */
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(242, 132, 47, 0.25);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-accent-hover); /* #d96f1c */
+      box-shadow: 0 4px 8px rgba(242, 132, 47, 0.35);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--orange-700);
+    }
+  }
+
+  .btn-navy {
+    background-color: var(--color-primary); /* #30497D */
     color: var(--color-on-primary);
 
     &:hover:not(:disabled) {
-      background-color: var(--color-primary-hover);
+      background-color: var(--color-primary-hover); /* #253C6D */
     }
 
     &:active:not(:disabled) {
@@ -69,6 +84,7 @@
 
     &:hover:not(:disabled) {
       background-color: var(--color-border);
+      color: var(--color-primary);
     }
   }
 
@@ -79,15 +95,16 @@
 
     &:hover:not(:disabled) {
       background-color: var(--color-primary-soft);
+      border-color: var(--color-primary-hover);
     }
   }
 
   .btn-amber {
     background-color: var(--color-accent);
-    color: var(--color-on-primary);
+    color: #ffffff;
 
     &:hover:not(:disabled) {
-      background-color: var(--amber-700);
+      background-color: var(--color-accent-hover);
     }
   }
 

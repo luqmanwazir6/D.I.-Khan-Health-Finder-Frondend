@@ -58,8 +58,8 @@
   }
 
   .stat-tone-warning {
-    background-color: var(--amber-50);
-    color: var(--amber-600);
+    background-color: var(--orange-50);
+    color: var(--orange-600);
   }
 
   .stat-tone-info {
